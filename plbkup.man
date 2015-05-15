@@ -1,15 +1,14 @@
 .TH PLBKUP 8l "28 November r
 .SH NAME
-.B plbkup
-- uses  
+\fBplbkup\fR - uses  
 .B pleskbackup
 and 
 .B lftp
 on a remote host to create a full system backup and move it to an ftp
 repository.
 .SH SYNOPSIS
-\fBplbkup [-c \fI<config_file>\fB] [-d] [-e \fI<e-mail_rcpt>\fR] 
-[\fB-l\fR] [-n <encryption_tool>] [\fB-p \fI<remote_psa_config>\fR] [\fB-t \fI<type>\fR]
+\fBplbkup\fR [\fB-c \fI<config_file>\fR] [\fB-d\fR] [\fB-e \fI<e-mail_rcpt>\fR] 
+[\fB-l\fR] [\fB-n \fI<encryption_tool>\fR] [\fB-p \fI<remote_psa_config>\fR] [\fB-t \fI<type>\fR]
 [\fB-T\fR] [\fB-v\fR] \fI<hostid>\fR
 .SH AVAILABILITY
 \fBplbkup\fR is a Bourne shell script which should work equally well on
