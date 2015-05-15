@@ -1,0 +1,41 @@
+<pre>
+
+# $Id: plbkup.cf,v 1.8 2014/08/24 16:52:58 fulford Exp $
+# $Revision: 1.8 $
+# Author C W Fulford.
+# Copyright 2013-2014 (c) C W Fulford. All rights reserved.
+# For assistance contact fulford@fulford.net 0709 229 5385
+#############################################################
+# The configuration file for plbkup. Each stanza starts in
+# column 1 with a hostname followed by a colon (:).
+# Configuration options are indented with a tab (or space) and
+# consist of an unlimted number of equates until terminated
+# with a blank line.
+# Lines preceded with a hash (#) are ignored. 
+# Equates preceded with a hash (#) may be enabled by removing the 
+# hash.
+ 
+dougal:
+	log=y
+	ftpsrvr=&lt;ftp_server&gt;
+	ftpusr=&lt;ftpuser&gt;
+	ftppass=&lt;password&gt;
+	encrypt="gpg"
+	ignore="^mysql.preupgrade"
+	gpass=&lt;gpg_passphrase&gt;
+######################################################################
+# This program is free software: you can redistribute it and or      #
+# modify it under the terms of the Lesser GNU General Public License #
+# as published by the Free Software Foundation, either version 3 of  #
+# the License, or (at your option) any later version.                #
+#                                                                    #
+# This program is distributed in the hope that it will be useful,    #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of     #    
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      #
+# GNU General Public License for more details.                       #
+#                                                                    # 
+# A copy of the Lesser GNU General Public License and the GNU        #
+# General Public License is available at                             #
+# &#60;http://www.gnu.org/licenses/&#62;.                                    #
+######################################################################
+</pre>

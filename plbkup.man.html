@@ -1,0 +1,269 @@
+
+<p><a href="#heading1">NAME</a><br/>
+<a href="#heading2">SYNOPSIS</a><br/>
+<a href="#heading3">AVAILABILITY</a><br/>
+<a href="#heading4">DESCRIPTION</a><br/>
+<a href="#heading5">OPTIONS</a><br/>
+<a href="#heading6">EXAMPLES</a><br/>
+<a href="#heading7">BUGS</a><br/>
+<a href="#heading8">FILES</a><br/>
+<a href="#heading9">SEE ALSO</a><br/>
+<a href="#heading10">AUTHOR</a><br/>
+
+</p>
+<hr/>
+
+
+<h2 id="heading1">NAME
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> -
+uses <b>pleskbackup</b> and <b>lftp</b> on a remote host to
+create a full system backup and move it to an ftp
+repository.</p>
+
+<h2 id="heading2">SYNOPSIS
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b><a href="./scripts.php?script=plbkup">plbkup</a>
+[-c</b> <i>&lt;config_file&gt;</i><b>] [-d] [-e</b>
+<i>&lt;e-mail_rcpt&gt;</i>] [<b>-l</b>] [-n
+&lt;encryption_tool&gt;] [<b>-p</b>
+<i>&lt;remote_psa_config&gt;</i>] [<b>-t</b>
+<i>&lt;type&gt;</i>] [<b>-T</b>] [<b>-v</b>]
+<i>&lt;hostid&gt;</i></p>
+
+<h2 id="heading3">AVAILABILITY
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i><b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b></i>
+is a Bourne shell script which should work equally well on
+all versions of UNIX, Linux and Apple Mac OS X.</p>
+
+<h2 id="heading4">DESCRIPTION
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The script
+<b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> invokes a <b>ssh</b> session to a remote host
+identified by <i>hostid</i> (which must be specified on the
+command line) and runs the <b>pleskbackup</b> command to
+create a full system backup. The resultant tar file is
+compressed with <b>gzip</b> and encrypted with <b>gpg</b>
+before being transferred using <b>lftp</b> to an <b>ftp</b>
+repository. <b>Lftp</b> is used rather than the built in ftp
+transfer agent in <b>pleskbackup</b> for no better reason
+than that it works, whereas, for me at least, the latter
+does not.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<i>hostid</i> may be a <i>host name</i> but I have found it
+far easier in this age of one way DNS lookups, long generic
+service provider canonical hostnames et al, to use a short
+host id that can be used in lookup tables and mapped in host
+files or the local DNS (where there is a split horizon).</p>
+
+<p style="margin-left:11%; margin-top: 1em">The script is
+most useful when invoked by <b>cron</b>.</p>
+
+<h2 id="heading5">OPTIONS
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<colgroup><col width="11%"></col>
+<col width="3%"></col>
+<col width="4%" class="center"></col>
+<col width="82%"></col>
+</colgroup>
+<tr valign="top" align="left">
+<td></td>
+<td>
+
+
+<p style="margin-top: 1em"><b>-c</b></p></td>
+<td></td>
+<td>
+
+
+<p style="margin-top: 1em"><i>&lt;config_file&gt;</i> The
+default configuration file is
+<i>/usr/local/etc/<a href="./scripts.php?script=plbkup.cf">plbkup.cf</a></i>. An alternative file may be
+set with the <b>-c</b> option.</p></td></tr>
+<tr valign="top" align="left">
+<td></td>
+<td>
+
+
+<p><b>-d</b></p></td>
+<td></td>
+<td>
+
+
+<p>Set <i>debug</i> mode on.</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>-e</b>
+<i>&lt;e-mail_rcpt&gt;</i></p>
+
+<p style="margin-left:18%;">Notifications and alerts will
+be sent to the mail address specified at
+<i>e-mail_recipient</i>. If the <b>-e</b> option is not used
+<b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> will attempt to send the email alert to the
+user invoking the command on the local host.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<colgroup><col width="11%"></col>
+<col width="3%"></col>
+<col width="4%" class="center"></col>
+<col width="82%"></col>
+</colgroup>
+<tr valign="top" align="left">
+<td></td>
+<td>
+
+
+<p><b>-l</b></p></td>
+<td></td>
+<td>
+
+
+<p>Use the <b>syslog</b> logging facility to record the use
+of <b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> and it&rsquo;s success or failure.</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>-n</b>
+<i>&lt;encryption_tool&gt;</i></p>
+
+<p style="margin-left:18%;">Encrypt the archive before
+transfering to the ftp repository using the specified
+encryption tool.</p>
+
+<p style="margin-left:11%;"><b>-p</b> <i>&lt;remote psa
+configuration file&gt;</i></p>
+
+<p style="margin-left:18%;"><b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> graps a copy of
+the current psa configuration file from the remote host and
+processes it locally each time the command is run.</p>
+
+<p style="margin-left:11%;"><b>-t</b>
+<i>&lt;type&gt;</i></p>
+
+<p style="margin-left:18%;">The default backup <i>type</i>
+is a full plesk <i>server</i> backup, other backup types
+(objects) can be specified on the command line. See
+<b>pleskbackup</b> documentation).</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<colgroup><col width="11%"></col>
+<col width="3%"></col>
+<col width="4%" class="center"></col>
+<col width="82%"></col>
+</colgroup>
+<tr valign="top" align="left">
+<td></td>
+<td>
+
+
+<p><b>-T</b></p></td>
+<td></td>
+<td>
+
+
+<p>Puts the script in test mode. Access and availabilty of
+all the components is checked but the actual backup, which
+might take several hours, is assumed to have completed
+successfully without actually having been built.</p></td></tr>
+<tr valign="top" align="left">
+<td></td>
+<td>
+
+
+<p><b>-v</b></p></td>
+<td></td>
+<td>
+
+
+<p>Set the operation mode of the script to <i>verbose</i>.
+In <i>verbose</i> mode <b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> will report it&rsquo;s
+progress as it runs and will write any alerts to <i>standard
+out</i>.</p> </td></tr>
+</table>
+
+<h2 id="heading6">EXAMPLES
+</h2>
+
+
+<pre style="margin-left:22%; margin-top: 1em"><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a> -l -e sysop@citylinux.com fcl</pre>
+
+
+<p style="margin-left:11%; margin-top: 1em">Create a full
+backup of <b>fcl</b>&rsquo;s host (Fulford Consulting Ltd)
+and transfer it to the associated <b>ftp</b> repository. Use
+the local <b>syslog</b> facility to log the command and
+it&rsquo;s success or failure.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Send
+notifications and alerts to <i>sysop@citylinux.com</i>.</p>
+
+<pre style="margin-left:22%; margin-top: 1em"><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a> -v cwit</pre>
+
+
+<p style="margin-left:11%; margin-top: 1em">Create a full
+backup of the host associated with &quot;City Windows
+IT&quot; (<b>cwit</b>) and transfer the resulting file to
+the associated <b>ftp</b> repository. Use <i>verbose</i>
+mode and report significant actions to standard out. send
+alerts by email to the current user&rsquo;s local e-mail
+address.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Notifications
+and alerts will be emailed to the user on the local
+host.</p>
+
+<h2 id="heading7">BUGS
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The script has
+very little input error checking. Network availability is
+not checked prior to invoking <b>ssh</b> commands. The
+script is designed to be used with frequently used hosts
+where <b>ssh</b> keys have already been exchanged.</p>
+
+<h2 id="heading8">FILES
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>/usr/local/etc/<a href="./scripts.php?script=plbkup.cf">plbkup.cf</a></i>,
+<i>/tmp/psaconf.$$</i> - a local copy of the remote
+psa.conf. Normally removed on completion, if the script
+fails the file will remain on the local system.</p>
+
+<h2 id="heading9">SEE ALSO
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><a href="./scripts.php?script=ftchbkup&amp;man=y">ftchbkup</a>,
+<a href="./scripts.php?script=rclean&amp;man=y">rclean</a>.</p>
+
+<h2 id="heading10">AUTHOR
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Clifford W
+Fulford, <a href="http://www.citylinux.com"
+title="Go to the City Linux homepage">
+City Linux
+</a>. Contact <a href="mailto:fulford@fulford.net" title="Send mail to Clifford W Fulford">fulford@fulford.net</a> or +44
+(0)709 229 5385.</p>
+<hr/>

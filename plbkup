@@ -1,0 +1,186 @@
+#!/bin/ksh
+#$Id: plbkup,v 1.126 2014/12/03 19:11:50 fulford Exp $
+# $Source: /src/merlin/usr/local/etc/RCS/plbkup,v $
+# $Revision: 1.126 $
+# Author C W Fulford.
+# Copyright 2013 (c) C W Fulford. 
+# Licensed for public use under the LGPL.
+# For assistance contact fulford@fulford.net 0709 229 5385
+##########################################################
+cmd=`basename $0`
+syntax="$cmd  [-c <config_file>] [-d] [-e <email_rcpt>] [-l] [-n] [-p <psa_config>] [-t <type>] [-T(est)]  [-v] <hostid>"
+while [ $# -gt 0 ];do
+	case $1 in
+		-c)conf= $2;shift 2;;
+		-d)set -x;debug=:;shift;;
+		-e)rcpt=$2;shift 2;;
+		-l)log=:;shift;;
+		-n) encrypt=$2;shift 2;;
+		-p)rpsaconf=$2;shift 2;;
+		-T)testmode=:;shift;;
+		-t)type=$2;shift 2;;
+		-v)verbose=:;shift;;
+		*)hostid=$1;shift;;
+	esac
+done
+[ -z "$hostid" ]&&{ echo "syntax: $syntax">&2;exit 1;}
+
+conf=${conf:-/usr/local/etc/plbkup.cf}
+[ -r $conf ]||{ echo "$cmd: can't read $conf." >&2;exit 1 ;}
+
+eval `sed $conf -ne '/^'$hostid':/,/^$/{
+	/^[ 	][^#]/p
+	}'
+`
+[ -z "$ftpusr" ]&&{
+	echo "$cmd: FTP user name not found in $conf">&2
+	exit 1
+}
+[ -z "$ftpsrvr" ]&&{
+	echo "$cmd: FTP server not found in $conf">&2
+	exit 1
+}
+[ -z "$ftppass" ]&&{
+	echo "$cmd: FTP passwd not found in $conf">&2
+	exit 1
+}
+if [ "$encrypt" = "gpg"   ];then
+	[ -z "$gpass" ] &&{
+       		echo "$cmd: Can't find gpg passphrase in $conf">&2
+		exit 1
+	}
+	gpfile=${gpfile:-".gpg"}
+fi
+
+
+debug=${debug:-""}
+verbose=${verbose:-""}
+[ -z "$hostid" ]&& { echo "$syntax" >&2;exit 1;}
+rpsaconf=${rpsaconf:-"/etc/psa/psa.conf"}
+lpsaconf=/tmp/psaconf.$$
+
+# fetch remote psa config file
+[ $verbose ] && echo "$cmd: fetching remote psa configuration"
+ssh $hostid "cat $rpsaconf" > $lpsaconf
+
+DUMP_D=`awk <$lpsaconf '/^DUMP_D/{print $2}'`
+PRODUCT_ROOT_D=`awk <$lpsaconf '/^PRODUCT_ROOT_D/{print $2}'` #plesk root
+pleskbackup=${PRODUCT_ROOT_D}/bin/pleskbackup
+td=`date +%y%m%d`
+arc=${cmd}${td}.tar
+arcz=${arc}.gz
+[ "$encrypt" = "gpg" ] && arcg=${arcz}.gpg
+log=${log:-""}
+oldarc=${cmd}`date +%y%m%d -d "3 days ago"`.tar.gz
+[ -n "$encrypt" ] && oldarc=$oldarc.$encrypt #make a resonable guess that
+					     # old archives were encrypted too.
+oldest=/tmp/oldest$$
+rcpt=${rcpt:-"fulford@citylinux.com"}
+tag="$cmd-$hostid"
+[ $testmode ] && rem="#"
+type=${type:-"server"}
+
+_end () {
+	e_val=$1
+	read msg
+	[ $log ] && logger -t $tag "$msg"
+	mailx -s "$cmd on $hostid - $msg" $rcpt </dev/null
+	exit $e_val
+}
+
+msg="backup started"
+[ $verbose ] && echo "$cmd: $msg"
+[ $log ]&& logger -t "$tag" "$msg"
+
+# Clear out existing. pleskbackup retains large date stamped 
+# intermediate backups.
+
+if [ `ssh $hostid "cd $DUMP_D &&{
+	sudo rm -r archives backup_* clients domains migration.log mysql.daily*  2>/dev/null;ls |sed -e '/'$ignore'/d'|wc -l
+	}" ` -eq 0 ]
+then
+	[ $verbose ] && echo "$cmd: $hostid repository cleared"
+	if [ $testmode ];then
+		ar=0
+		ssh $hostid "cd $DUMP_D;sudo cp /etc/group $arc"
+	else
+		stime=`date "+%H:%M"`
+		ssh $hostid "cd $DUMP_D &&{
+		    [ $verbose ]&& echo \"$cmd: pleskbackup started $stime\" 
+		    [ $verbose ]&& option=\"-v\"
+		    sudo $pleskbackup $type $option --output-file=$arc
+		    ar=$?
+		   }
+		"
+	fi
+else
+	msg="Unexpected items in bagging area"
+	[ $verbose ]&& echo "$cmd: $msg" >&2
+	echo "failed. $msg"|_end 
+fi
+
+if [ "$ar" -gt 0 ];then
+	msg="failed to create $arc"
+        [ $verbose ] && echo "$cmd: $msg" >&2
+	echo "$msg"| _end 1
+else
+	ssh $hostid "cd $DUMP_D; sudo gzip $arc"
+	if ssh $hostid "[ -f $DUMP_D/$arcz ]";then
+	       	msg="creation of $arcz completed"
+		if [ "$encrypt" = "gpg" ];then
+		   echo $gpass |
+		   ssh $hostid "cd $DUMP_D;sudo dd of=.gpg 2>/dev/null
+		     sudo $encrypt -c --batch --passphrase-file .gpg $arcz 2>/dev/null &&
+			sudo rm $arcz  .gpg
+		   "
+		fi
+	else
+		msg="creation of $arcz failed">&2
+		echo "$msg"| _end 1
+	fi
+	# create lftp bookmarks file
+	bookmarks="/root/.lftp/bookmarks"
+	echo "plbkup ftp://bak2743705:icnoway24sit@backup288.onlinehome-server.info"|(ssh $hostid "sudo dd of=$bookmarks") 2>/dev/null
+	[ $testmode ] && msg="test creation of $arcz completed"
+	[ $verbose ] && echo "$cmd: $msg"
+	[ $debug ] && ftpdebug="debug"
+	ssh $hostid "cd $DUMP_D && 
+		# "plbkup" is the lftp bookmark
+		sudo lftp <<- .
+		$ftpdebug 
+		set ftp:ssl-allow true
+		open plbkup
+		${rem}put -E ${arcg:=$arcz}
+		bye
+	.
+	"
+	#lftp put -E removes source file if transfer successful
+	if ssh $hostid "[ -f $DUMP_D/${arcg:=$arcz} ]";then
+		msg="transfer of $arc\ failed."
+		echo $msg|_end 1
+	else
+		msg="transfer of $arcz completed"
+		[ $verbose ] && echo "$cmd: $msg"
+		# so remove old archive
+		ssh $hostid "cd $DUMP_D &&
+				sudo lftp <<- .
+					$ftpdebug
+					open plbkup
+					ls
+					bye
+				.
+		"|awk 'NR == 1{print $9}'>$oldest
+		oldarc=$(<$oldest)
+		ssh $hostid "
+			sudo lftp <<- .
+				$ftpdebug
+				open plbkup
+				$rem rm $oldarc
+				bye
+			.
+			sudo rm $bookmarks
+		"
+	fi
+	rm $lpsaconf $oldest
+	echo $msg|_end 0
+fi
