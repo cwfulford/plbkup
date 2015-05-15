@@ -18,7 +18,7 @@
 </h2>
 
 
-<p style="margin-left:11%; margin-top: 1em"><b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> -
+<p style="margin-left:11%; margin-top: 1em"><b><a href="./scripts.php?script=plbkup">plbkup</a></b> -
 uses <b>pleskbackup</b> and <b>lftp</b> on a remote host to
 create a full system backup and move it to an ftp
 repository.</p>
@@ -27,7 +27,7 @@ repository.</p>
 </h2>
 
 
-<p style="margin-left:11%; margin-top: 1em"><b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b>
+<p style="margin-left:11%; margin-top: 1em"><b><a href="./scripts.php?script=plbkup">plbkup</a></b>
 [<b>-c</b> <i>&lt;config_file&gt;</i>] [<b>-d</b>]
 [<b>-e</b> <i>&lt;e-mail_rcpt&gt;</i>] [<b>-l</b>]
 [<b>-n</b> <i>&lt;encryption_tool&gt;</i>] [<b>-p</b>
@@ -40,7 +40,7 @@ repository.</p>
 
 
 
-<p style="margin-left:11%; margin-top: 1em"><i><b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b></i>
+<p style="margin-left:11%; margin-top: 1em"><i><b><a href="./scripts.php?script=plbkup">plbkup</a></b></i>
 is a Bourne shell script which should work equally well on
 all versions of UNIX, Linux and Apple Mac OS X.</p>
 
@@ -49,7 +49,7 @@ all versions of UNIX, Linux and Apple Mac OS X.</p>
 
 
 <p style="margin-left:11%; margin-top: 1em">The script
-<b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> invokes a <b>ssh</b> session to a remote host
+<b><a href="./scripts.php?script=plbkup">plbkup</a></b> invokes a <b>ssh</b> session to a remote host
 identified by <i>hostid</i> (which must be specified on the
 command line) and runs the <b>pleskbackup</b> command to
 create a full system backup. The resultant tar file is
@@ -114,7 +114,7 @@ set with the <b>-c</b> option.</p></td></tr>
 <p style="margin-left:18%;">Notifications and alerts will
 be sent to the mail address specified at
 <i>e-mail_recipient</i>. If the <b>-e</b> option is not used
-<b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> will attempt to send the email alert to the
+<b><a href="./scripts.php?script=plbkup">plbkup</a></b> will attempt to send the email alert to the
 user invoking the command on the local host.</p>
 
 <table width="100%" border="0" rules="none" frame="void"
@@ -135,7 +135,7 @@ user invoking the command on the local host.</p>
 
 
 <p>Use the <b>syslog</b> logging facility to record the use
-of <b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> and it&rsquo;s success or failure.</p></td></tr>
+of <b><a href="./scripts.php?script=plbkup">plbkup</a></b> and it&rsquo;s success or failure.</p></td></tr>
 </table>
 
 <p style="margin-left:11%;"><b>-n</b>
@@ -148,7 +148,7 @@ encryption tool.</p>
 <p style="margin-left:11%;"><b>-p</b> <i>&lt;remote psa
 configuration file&gt;</i></p>
 
-<p style="margin-left:18%;"><b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> graps a copy of
+<p style="margin-left:18%;"><b><a href="./scripts.php?script=plbkup">plbkup</a></b> graps a copy of
 the current psa configuration file from the remote host and
 processes it locally each time the command is run.</p>
 
@@ -192,7 +192,7 @@ successfully without actually having been built.</p></td></tr>
 
 
 <p>Set the operation mode of the script to <i>verbose</i>.
-In <i>verbose</i> mode <b><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a></b> will report it&rsquo;s
+In <i>verbose</i> mode <b><a href="./scripts.php?script=plbkup">plbkup</a></b> will report it&rsquo;s
 progress as it runs and will write any alerts to <i>standard
 out</i>.</p> </td></tr>
 </table>
@@ -201,7 +201,7 @@ out</i>.</p> </td></tr>
 </h2>
 
 
-<pre style="margin-left:22%; margin-top: 1em"><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a> -l -e sysop@citylinux.com fcl</pre>
+<pre style="margin-left:22%; margin-top: 1em"><a href="./scripts.php?script=plbkup">plbkup</a> -l -e sysop@citylinux.com fcl</pre>
 
 
 <p style="margin-left:11%; margin-top: 1em">Create a full
@@ -213,7 +213,7 @@ it&rsquo;s success or failure.</p>
 <p style="margin-left:11%; margin-top: 1em">Send
 notifications and alerts to <i>sysop@citylinux.com</i>.</p>
 
-<pre style="margin-left:22%; margin-top: 1em"><a href="./scripts.php?script=<a href="./scripts.php?script=plbkup">plbkup</a>"><a href="./scripts.php?script=plbkup">plbkup</a></a> -v cwit</pre>
+<pre style="margin-left:22%; margin-top: 1em"><a href="./scripts.php?script=plbkup">plbkup</a> -v cwit</pre>
 
 
 <p style="margin-left:11%; margin-top: 1em">Create a full
