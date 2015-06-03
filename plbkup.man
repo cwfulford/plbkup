@@ -1,11 +1,7 @@
 .TH PLBKUP 8l "28 November r
 .SH NAME
-\fBplbkup\fR - uses  
-.B pleskbackup
-and 
-.B lftp
-on a remote host to create a full system backup and move it to an ftp
-repository.
+.B plbkup
+- creates a full system backup on a remote host and moves it to an ftp repository.
 .SH SYNOPSIS
 \fBplbkup\fR [\fB-c \fI<config_file>\fR] [\fB-d\fR] [\fB-e \fI<e-mail_rcpt>\fR] 
 [\fB-l\fR] [\fB-n \fI<encryption_tool>\fR] [\fB-p \fI<remote_psa_config>\fR] [\fB-t \fI<type>\fR]
